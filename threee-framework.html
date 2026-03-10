@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreeE — Effectiveness · Efficacy · Efficiency</title>
+
+  <!-- ─────────────────────────────────────────────
+       TYPEFACE SLOTS
+       Replace the @import below with your own fonts.
+       Then update --font-display, --font-body, --font-mono
+       in :root to match.
+  ───────────────────────────────────────────── -->
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
+  <!-- <link href="YOUR_FONT_URL" rel="stylesheet"> -->
+
+  <style>
+
+    /* ── DESIGN TOKENS ─────────────────────────────
+       All visual parameters live here.
+       Swap colors, type, spacing in one place.
+    ─────────────────────────────────────────────── */
+    :root {
+      /* Typography — replace with your typefaces */
+      --font-display:   Georgia, serif;          /* Headings / display */
+      --font-body:      system-ui, sans-serif;   /* Body copy */
+      --font-mono:      monospace;               /* Labels / tags */
+      --font-size-base: 17px;
+      --line-height:    1.7;
+
+      /* Color — replace with your brand palette */
+      --color-bg:           #f9f8f5;
+      --color-surface:      #ffffff;
+      --color-ink:          #111111;
+      --color-ink-muted:    #555555;
+      --color-ink-faint:    #999999;
+      --color-rule:         #e2e0db;
+      --color-accent:       #111111;   /* Primary accent — swap to brand color */
+      --color-accent-2:     #555555;   /* Secondary accent */
+      --color-tag-e1:       #111111;   /* Effectiveness tag */
+      --color-tag-e2:       #444444;   /* Efficacy tag */
+      --color-tag-e3:       #777777;   /* Efficiency tag */
+
+      /* Spacing */
+      --space-xs:   0.375rem;
+      --space-sm:   0.75rem;
+      --space-md:   1.5rem;
+      --space-lg:   3rem;
+      --space-xl:   6rem;
+      --space-2xl: 10rem;
+
+      /* Layout */
+      --max-width:       820px;
+      --max-width-wide: 1060px;
+    }
+
+    /* ── RESET & BASE ──────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: var(--font-size-base);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      line-height: var(--line-height);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LAYOUT ────────────────────────────────── */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    .container--wide {
+      max-width: var(--max-width-wide);
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    section {
+      padding: var(--space-xl) 0;
+      border-top: 1px solid var(--color-rule);
+    }
+
+    section:first-of-type {
+      border-top: none;
+    }
+
+    /* ── TYPOGRAPHY ────────────────────────────── */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: normal;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); }
+    h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: var(--space-md); }
+    h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); margin-bottom: var(--space-sm); }
+    h4 { font-size: 1rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    p { margin-bottom: var(--space-md); max-width: 68ch; }
+    p:last-child { margin-bottom: 0; }
+
+    strong { font-weight: 600; }
+
+    em { font-style: italic; }
+
+    blockquote {
+      border-left: 3px solid var(--color-ink);
+      padding: var(--space-sm) var(--space-md);
+      margin: var(--space-lg) 0;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      line-height: 1.5;
+      color: var(--color-ink);
+    }
+
+    blockquote cite {
+      display: block;
+      margin-top: var(--space-sm);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-style: normal;
+      color: var(--color-ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── LABELS & TAGS ─────────────────────────── */
+    .label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-ink-muted);
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.2em 0.6em;
+      border: 1px solid currentColor;
+    }
+
+    /* ── DIVIDER ───────────────────────────────── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--color-rule);
+      margin: var(--space-lg) 0;
+    }
+
+    /* ───────────────────────────────────────────────────────────
+       SECTION: HEADER / COVER
+    ─────────────────────────────────────────────────────────── */
+    .cover {
+      padding: var(--space-2xl) 0 var(--space-xl);
+      border-top: none;
+    }
+
+    .cover__eyebrow {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .cover__eyebrow .label { color: var(--color-ink-faint); }
+
+    .cover__title {
+      margin-bottom: var(--space-md);
+    }
+
+    .cover__subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--color-ink-muted);
+      font-style: italic;
+      max-width: 56ch;
+      line-height: 1.5;
+      margin-bottom: var(--space-lg);
+    }
+
+    .cover__sequence {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-top: var(--space-lg);
+    }
+
+    .cover__sequence-item {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0.35em 0.9em;
+      border: 1px solid var(--color-ink);
+    }
+
+    .cover__sequence-arrow {
+      color: var(--color-ink-faint);
+      font-size: 0.9rem;
+    }
+
+    /* ───────────────────────────────────────────────────────────
+       SECTION: AXIOM / CORE STATEMENT
+    ─────────────────────────────────────────────────────────── */
+    .axiom {
+      background: var(--color-ink);
+      color: var(--color-bg);
+      padding: var(--space-xl) 0;
+      border-top: none;
+    }
+
+    .axiom .container { }
+
+    .axiom__label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-ink-faint);
+      margin-bottom: var(--space-md);
+    }
+
+    .axiom__statement {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+      line-height: 1.3;
+      max-width: 28ch;
+    }
+
+    .axiom__annotation {
+      margin-top: var(--space-lg);
+      color: #aaaaaa;
+      max-width: 60ch;
+    }
+
+    /* ───────────────────────────────────────────────────────────
+       SECTION: THREE LAYERS
+    ─────────────────────────────────────────────────────────── */
+    .layers__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--color-rule);
+      margin-top: var(--space-lg);
+    }
+
+    .layer {
+      background: var(--color-surface);
+      padding: var(--space-lg) var(--space-md);
+    }
+
+    .layer__index {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--color-ink-faint);
+      text-transform: uppercase;
+      margin-bottom: var(--space-xs);
+    }
+
+    .layer__name {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-xs);
+    }
+
+    .layer__question {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--color-ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--color-rule);
+    }
+
+    .layer__body { font-size: 0.95rem; }
+
+    .layer__test {
+      margin-top: var(--space-md);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-bg);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--color-ink-muted);
+      line-height: 1.5;
+    }
+
+    .layer__test strong {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+      margin-bottom: 0.3em;
+      color: var(--color-ink-faint);
+    }
+
+    /* ───────────────────────────────────────────────────────────
+       SECTION: DOMAIN APPLICATIONS
+    ─────────────────────────────────────────────────────────── */
+    .domains__intro {
+      max-width: 62ch;
+      margin-bottom: var(--space-xl);
+    }
+
+    .domain {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--space-lg);
+      padding: var(--space-lg) 0;
+      border-bottom: 1px solid var(--color-rule);
+    }
+
+    .domain:last-child { border-bottom: none; }
+
+    .domain__header { }
+
+    .domain__number {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--color-ink-faint);
+      margin-bottom: var(--space-xs);
+    }
+
+    .domain__title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      line-height: 1.2;
+      margin-bottom: var(--space-sm);
+    }
+
+    .domain__tag-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      margin-top: var(--space-md);
+    }
+
+    .domain__tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-ink-faint);
+    }
+
+    .domain__body { }
+
+    .domain__intro-text {
+      margin-bottom: var(--space-md);
+      font-size: 0.95rem;
+      color: var(--color-ink-muted);
+      font-style: italic;
+    }
+
+    .domain__rows { }
+
+    .domain__row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: var(--space-md);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px dotted var(--color-rule);
+      font-size: 0.92rem;
+    }
+
+    .domain__row:last-child { border-bottom: none; }
+
+    .domain__row-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-ink-faint);
+      padding-top: 0.15em;
+    }
+
+    .domain__row-content { }
+
+    /* ───────────────────────────────────────────────────────────
+       SECTION: SEQUENCE LOGIC
+    ─────────────────────────────────────────────────────────── */
+    .sequence__diagram {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: var(--space-lg) 0;
+      border: 1px solid var(--color-rule);
+    }
+
+    .seq-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--color-rule);
+    }
+
+    .seq-row:last-child { border-bottom: none; }
+
+    .seq-row__gate {
+      padding: var(--space-md);
+      border-right: 1px solid var(--color-rule);
+      background: var(--color-bg);
+    }
+
+    .seq-row__gate .label { margin-bottom: var(--space-xs); }
+
+    .seq-row__gate h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: normal;
+      text-transform: none;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.2em;
+    }
+
+    .seq-row__gate .question {
+      font-size: 0.8rem;
+      color: var(--color-ink-muted);
+      font-style: italic;
+    }
+
+    .seq-row__dependency {
+      padding: var(--space-md);
+      font-size: 0.9rem;
+    }
+
+    .seq-row__dependency p { margin-bottom: 0; }
+
+    /* ───────────────────────────────────────────────────────────
+       SECTION: FAILURE GALLERY
+    ─────────────────────────────────────────────────────────── */
+    .failures__intro {
+      max-width: 62ch;
+      margin-bottom: var(--space-lg);
+    }
+
+    .failure-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--color-rule);
+      margin-top: var(--space-lg);
+    }
+
+    .failure-card {
+      background: var(--color-surface);
+      padding: var(--space-md);
+    }
+
+    .failure-card__domain {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-ink-faint);
+      margin-bottom: var(--space-xs);
+    }
+
+    .failure-card__name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .failure-card__body {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--color-ink-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    .failure-card__error {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: var(--space-xs) var(--space-sm);
+      background: var(--color-bg);
+      color: var(--color-ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ───────────────────────────────────────────────────────────
+       SECTION: RECURSIVE ARGUMENT
+    ─────────────────────────────────────────────────────────── */
+    .recursive__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--color-rule);
+      margin: var(--space-lg) 0;
+    }
+
+    .recursive-card {
+      background: var(--color-surface);
+      padding: var(--space-md);
+    }
+
+    .recursive-card__gate {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-ink-faint);
+      margin-bottom: var(--space-xs);
+    }
+
+    .recursive-card__verdict {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: var(--space-sm);
+    }
+
+    .recursive-card__body {
+      font-size: 0.88rem;
+      color: var(--color-ink-muted);
+      line-height: 1.6;
+    }
+
+    /* ───────────────────────────────────────────────────────────
+       SECTION: REFERENCE TABLE
+    ─────────────────────────────────────────────────────────── */
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--space-lg);
+      font-size: 0.88rem;
+    }
+
+    .ref-table th {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-ink-faint);
+      text-align: left;
+      padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
+      border-bottom: 1px solid var(--color-ink);
+    }
+
+    .ref-table td {
+      padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
+      border-bottom: 1px solid var(--color-rule);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .ref-table tr:last-child td { border-bottom: none; }
+
+    .ref-table .thinker {
+      font-family: var(--font-display);
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    /* ───────────────────────────────────────────────────────────
+       SECTION: CLOSING / CONCLUSION
+    ─────────────────────────────────────────────────────────── */
+    .closing {
+      background: var(--color-ink);
+      color: var(--color-bg);
+      padding: var(--space-xl) 0;
+      border-top: none;
+    }
+
+    .closing__body {
+      max-width: 64ch;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #cccccc;
+    }
+
+    .closing__body p { max-width: 64ch; }
+
+    .closing__final {
+      margin-top: var(--space-lg);
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      line-height: 1.3;
+      color: var(--color-bg);
+      max-width: 32ch;
+    }
+
+    /* ───────────────────────────────────────────────────────────
+       FOOTER
+    ─────────────────────────────────────────────────────────── */
+    footer {
+      padding: var(--space-lg) 0;
+      border-top: 1px solid var(--color-rule);
+    }
+
+    footer .label { color: var(--color-ink-faint); }
+
+    /* ───────────────────────────────────────────────────────────
+       RESPONSIVE
+    ─────────────────────────────────────────────────────────── */
+    @media (max-width: 780px) {
+      .layers__grid        { grid-template-columns: 1fr; }
+      .domain              { grid-template-columns: 1fr; }
+      .failure-grid        { grid-template-columns: 1fr; }
+      .recursive__grid     { grid-template-columns: 1fr; }
+      .seq-row             { grid-template-columns: 1fr; }
+      .seq-row__gate       { border-right: none; border-bottom: 1px solid var(--color-rule); }
+      .domain__row         { grid-template-columns: 1fr; }
+      .domain__row-label   { padding-top: 0; }
+      .cover { padding: var(--space-xl) 0 var(--space-lg); }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       COVER
+  ════════════════════════════════════════════ -->
+  <section class="cover">
+    <div class="container">
+
+      <div class="cover__eyebrow">
+        <span class="label">Studio Operating Principle</span>
+        <span class="label">—</span>
+        <span class="label">Framework 001</span>
+      </div>
+
+      <h1 class="cover__title">ThreeE</h1>
+
+      <p class="cover__subtitle">
+        Effectiveness · Efficacy · Efficiency — a decision-making sequence
+        for marketing, product, brand, and experience design.
+      </p>
+
+      <p>
+        Every studio project begins with three questions — asked in one specific order.
+        Are we pursuing the right objective? Will this approach reach it?
+        Are we using minimum resources to get there?
+        The sequence is not a preference. It is a logical dependency. ThreeE
+        formalizes the order in which these questions must be answered and
+        makes that order the foundation of every service the studio delivers.
+      </p>
+
+      <div class="cover__sequence">
+        <span class="cover__sequence-item">01 · Effectiveness</span>
+        <span class="cover__sequence-arrow">→</span>
+        <span class="cover__sequence-item">02 · Efficacy</span>
+        <span class="cover__sequence-arrow">→</span>
+        <span class="cover__sequence-item">03 · Efficiency</span>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       AXIOM
+  ════════════════════════════════════════════ -->
+  <section class="axiom">
+    <div class="container">
+      <p class="axiom__label">The Central Claim</p>
+      <p class="axiom__statement">
+        The most expensive failure mode in any project is not bad execution.
+        It is brilliant execution of the wrong objective.
+      </p>
+      <p class="axiom__annotation">
+        Efficiency applied before Effectiveness is confirmed does not
+        accelerate progress — it accelerates misdirection. ThreeE is
+        the structural correction: direction before method before speed,
+        without exception.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       THREE LAYERS
+  ════════════════════════════════════════════ -->
+  <section>
+    <div class="container--wide">
+
+      <div class="container" style="padding-left:0; padding-right:0;">
+        <span class="label">The Three Gates</span>
+        <h2>Each gate is a prerequisite for the next</h2>
+        <p>
+          The three layers are not dimensions to balance. They are gates
+          to pass in sequence. You cannot evaluate Efficacy before
+          Effectiveness is confirmed. You cannot optimize for Efficiency
+          before Efficacy is validated. This is a logical dependency —
+          not a weighting exercise.
+        </p>
+      </div>
+
+      <div class="layers__grid">
+
+        <div class="layer">
+          <p class="layer__index">Gate 01</p>
+          <h3 class="layer__name">Effectiveness</h3>
+          <p class="layer__question">Are we doing the right thing?</p>
+          <div class="layer__body">
+            <p>
+              Effectiveness is the direction gate. Before any method is
+              chosen or any resource committed, Effectiveness asks whether
+              the goal itself is correctly defined — whether the objective
+              is worth pursuing and whether achieving it would create
+              meaningful change.
+            </p>
+            <p>
+              This is the hardest gate. It requires stepping outside the
+              immediate task and questioning the frame. It demands the
+              kind of abstraction that execution-oriented environments
+              actively resist. It is the gate most frequently skipped —
+              and the most expensive to skip.
+            </p>
+            <p>
+              Failure at this layer is invisible until late. A project
+              that fails on Effectiveness can be executed flawlessly in
+              every other dimension and still produce zero value. Worse:
+              high execution quality on an ineffective goal generates
+              the subjective feeling of progress while the gap between
+              work and value grows.
+            </p>
+          </div>
+          <div class="layer__test">
+            <strong>The Test</strong>
+            If this succeeds completely, does it actually matter?
+          </div>
+        </div>
+
+        <div class="layer">
+          <p class="layer__index">Gate 02</p>
+          <h3 class="layer__name">Efficacy</h3>
+          <p class="layer__question">Does this approach produce the result?</p>
+          <div class="layer__body">
+            <p>
+              Efficacy is the method gate. Assuming direction is correct
+              (Effectiveness confirmed), Efficacy asks whether the
+              chosen approach demonstrably produces the intended outcome
+              — not in theory, but given the actual constraints of
+              this situation, this market, this user, this product.
+            </p>
+            <p>
+              Efficacy is distinct from Effectiveness in a critical way.
+              Effectiveness is about choosing the right destination.
+              Efficacy is about choosing a vehicle that can actually
+              reach it. An approach can point at the right goal and
+              still be incapable of reaching it.
+            </p>
+            <p>
+              The paradigm shift principle lives here. When a new method
+              demonstrably outperforms the established one, clinging to
+              the familiar approach is an Efficacy failure. The question
+              is always: given available evidence, does this approach
+              actually work for this goal?
+            </p>
+          </div>
+          <div class="layer__test">
+            <strong>The Test</strong>
+            Given this approach, is success genuinely achievable?
+          </div>
+        </div>
+
+        <div class="layer">
+          <p class="layer__index">Gate 03</p>
+          <h3 class="layer__name">Efficiency</h3>
+          <p class="layer__question">Are we using minimum resources?</p>
+          <div class="layer__body">
+            <p>
+              Efficiency is the optimization gate. Once Effectiveness
+              and Efficacy are confirmed, Efficiency asks how to reach
+              the outcome with minimum expenditure of time, budget,
+              attention, and complexity. It is the only gate where
+              speed and cost reduction are legitimate primary drivers.
+            </p>
+            <p>
+              Efficiency has its own failure mode: premature optimization.
+              Refining a process before its direction and method are
+              validated produces a fast, cheap path to the wrong place.
+              The pipeline must be correct before it is fast.
+            </p>
+            <p>
+              When Effectiveness and Efficacy are both confirmed,
+              Efficiency is not optional. Waste in an otherwise correct
+              system is still waste. But its position — third, always
+              third — cannot be moved without corrupting the entire
+              framework.
+            </p>
+          </div>
+          <div class="layer__test">
+            <strong>The Test</strong>
+            Is this the leanest path to an already-confirmed outcome?
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       DOMAIN APPLICATIONS
+  ════════════════════════════════════════════ -->
+  <section>
+    <div class="container">
+
+      <span class="label">Studio Services</span>
+      <h2>ThreeE in practice across four domains</h2>
+
+      <p class="domains__intro">
+        ThreeE is not applied differently in different contexts — the principle
+        is invariant. But the questions it generates are highly specific to each
+        domain. What counts as "the right thing" in a brand-platform project is
+        distinct from what it means in a CJM redesign. The following applies the
+        three gates to each area of studio practice.
+      </p>
+
+      <!-- DOMAIN 1: MARKETING -->
+      <div class="domain">
+        <div class="domain__header">
+          <p class="domain__number">01</p>
+          <h3 class="domain__title">Marketing Strategy & Communication</h3>
+          <div class="domain__tag-group">
+            <span class="domain__tag">Positioning</span>
+            <span class="domain__tag">Messaging</span>
+            <span class="domain__tag">Campaign design</span>
+            <span class="domain__tag">Content strategy</span>
+          </div>
+        </div>
+
+        <div class="domain__body">
+          <p class="domain__intro-text">
+            Most marketing underperforms not because execution is poor, but because
+            the strategic objective was never properly defined — or was defined
+            as a proxy metric (CTR, impressions) rather than a real goal (changed
+            belief, new behavior, market position shift).
+          </p>
+
+          <div class="domain__rows">
+
+            <div class="domain__row">
+              <span class="domain__row-label">Effectiveness</span>
+              <div class="domain__row-content">
+                What behavior or belief must change for this campaign to have
+                produced value? Is that the actual goal, or is it a proxy for
+                it? Does solving this marketing problem move the product
+                position, the revenue model, or the target audience in a
+                meaningful direction — or does it optimize an existing
+                position that may itself be the wrong one?
+              </div>
+            </div>
+
+            <div class="domain__row">
+              <span class="domain__row-label">Efficacy</span>
+              <div class="domain__row-content">
+                Does the chosen format, channel, and message architecture
+                actually produce the belief or behavior shift identified above?
+                Is there evidence — direct or analogical — that this type
+                of communication reaches and moves this specific audience?
+                What assumptions about attention, trust, and comprehension
+                is this approach making, and are those assumptions valid?
+              </div>
+            </div>
+
+            <div class="domain__row">
+              <span class="domain__row-label">Efficiency</span>
+              <div class="domain__row-content">
+                Given direction and method are confirmed: what is the
+                minimum content volume, production cost, and channel
+                investment that delivers this message at sufficient reach
+                and frequency? Which elements can be systematized,
+                templated, or automated without degrading signal quality?
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- DOMAIN 2: PRODUCT DEVELOPMENT -->
+      <div class="domain">
+        <div class="domain__header">
+          <p class="domain__number">02</p>
+          <h3 class="domain__title">Product Development</h3>
+          <div class="domain__tag-group">
+            <span class="domain__tag">Product strategy</span>
+            <span class="domain__tag">Feature definition</span>
+            <span class="domain__tag">MVP scoping</span>
+            <span class="domain__tag">Roadmap planning</span>
+          </div>
+        </div>
+
+        <div class="domain__body">
+          <p class="domain__intro-text">
+            Products fail at Effectiveness when they build for a problem
+            that doesn't exist at sufficient scale, or for a user who
+            doesn't represent the actual market. They fail at Efficacy
+            when the solution architecture cannot reliably produce the
+            outcome it promises. They fail at Efficiency when complexity
+            is added before either of those questions is answered.
+          </p>
+
+          <div class="domain__rows">
+
+            <div class="domain__row">
+              <span class="domain__row-label">Effectiveness</span>
+              <div class="domain__row-content">
+                Is this product solving a problem that exists at commercial
+                scale — or are we building for an articulated user need
+                that doesn't map to actual behavior? Does the product
+                category we are entering have the structural conditions
+                (addressable market, competitive gap, willingness to pay)
+                to support a viable business? Are we building the right
+                product, or building a product for the wrong moment?
+              </div>
+            </div>
+
+            <div class="domain__row">
+              <span class="domain__row-label">Efficacy</span>
+              <div class="domain__row-content">
+                Does the chosen solution architecture reliably produce
+                the outcome that justifies the product's existence? Is
+                the MVP designed to answer the highest-uncertainty
+                question (does this actually solve the problem?) rather
+                than the lowest-cost question (what can we build fastest)?
+                Is there a validated feedback loop between the product's
+                outputs and the user outcomes it is meant to create?
+              </div>
+            </div>
+
+            <div class="domain__row">
+              <span class="domain__row-label">Efficiency</span>
+              <div class="domain__row-content">
+                What is the minimal viable scope that can test the
+                Efficacy hypothesis at meaningful confidence? Which
+                features are infrastructure for learning versus
+                infrastructure for production? Where can existing
+                patterns, components, and integrations replace
+                custom development without reducing the quality of
+                the Efficacy test?
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- DOMAIN 3: BRAND PLATFORM -->
+      <div class="domain">
+        <div class="domain__header">
+          <p class="domain__number">03</p>
+          <h3 class="domain__title">Brand Platform Creation</h3>
+          <div class="domain__tag-group">
+            <span class="domain__tag">Brand strategy</span>
+            <span class="domain__tag">Identity systems</span>
+            <span class="domain__tag">Tone & voice</span>
+            <span class="domain__tag">Visual language</span>
+          </div>
+        </div>
+
+        <div class="domain__body">
+          <p class="domain__intro-text">
+            Brand work fails at Effectiveness when a beautifully executed identity
+            is built on a positioning that doesn't distinguish the company in
+            its actual competitive context. It fails at Efficacy when the visual
+            and verbal system, however internally coherent, does not reliably
+            produce the perception it was designed to create. Efficiency
+            applied before these questions are answered produces polished
+            irrelevance.
+          </p>
+
+          <div class="domain__rows">
+
+            <div class="domain__row">
+              <span class="domain__row-label">Effectiveness</span>
+              <div class="domain__row-content">
+                What specific perception must this brand create in the
+                minds of a specific audience, in a specific competitive
+                context? Is the positioning anchored in a genuine
+                differentiator — something true, ownable, and valued
+                — or is it aspirational language that multiple competitors
+                could claim equally? Does the brand platform change
+                how the target audience understands what this company
+                does and why that matters?
+              </div>
+            </div>
+
+            <div class="domain__row">
+              <span class="domain__row-label">Efficacy</span>
+              <div class="domain__row-content">
+                Does the visual language, tone of voice, and messaging
+                architecture reliably produce the target perception — not
+                internally, but when tested against the actual audience?
+                Is the identity system designed to perform across the
+                specific touchpoints where brand contact actually occurs
+                for this company's customers? Does the system hold
+                together at every scale it will be required to operate at?
+              </div>
+            </div>
+
+            <div class="domain__row">
+              <span class="domain__row-label">Efficiency</span>
+              <div class="domain__row-content">
+                What is the minimum viable brand system that delivers
+                the required perception at required consistency — without
+                over-specifying to the point of constraining application?
+                Which elements require custom design versus adaptation
+                of established patterns? Where can modular design
+                logic reduce production cost without reducing brand
+                coherence?
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- DOMAIN 4: UX / CJM / WORKFLOWS -->
+      <div class="domain">
+        <div class="domain__header">
+          <p class="domain__number">04</p>
+          <h3 class="domain__title">UX, CJM &amp; Workflow Design</h3>
+          <div class="domain__tag-group">
+            <span class="domain__tag">UX / UI design</span>
+            <span class="domain__tag">Customer journey mapping</span>
+            <span class="domain__tag">Process design</span>
+            <span class="domain__tag">Pipeline architecture</span>
+          </div>
+        </div>
+
+        <div class="domain__body">
+          <p class="domain__intro-text">
+            Experience design is the domain where Efficiency pressure is
+            highest — delivery timelines, component libraries, and design
+            systems all create strong incentives to optimize before
+            direction is established. ThreeE is most valuable here as a
+            forcing function: define the user outcome before the flow,
+            validate the flow before refining the interaction.
+          </p>
+
+          <div class="domain__rows">
+
+            <div class="domain__row">
+              <span class="domain__row-label">Effectiveness</span>
+              <div class="domain__row-content">
+                What specific user outcome must this experience produce?
+                Not a task completion (user submits form) but a real
+                outcome (user understands pricing, feels confident,
+                proceeds to purchase). Is that outcome the one the
+                business actually needs — aligned with the conversion
+                model, retention objective, or support reduction target
+                that justifies this design investment?
+              </div>
+            </div>
+
+            <div class="domain__row">
+              <span class="domain__row-label">Efficacy</span>
+              <div class="domain__row-content">
+                Does the proposed flow, information architecture, and
+                interaction model reliably produce the target user outcome
+                for the actual user population — including edge cases,
+                low-literacy users, and high-friction contexts? Are the
+                critical decision points in the journey designed to
+                resolve the actual user anxieties and uncertainties at
+                those moments, or to serve the business logic?
+              </div>
+            </div>
+
+            <div class="domain__row">
+              <span class="domain__row-label">Efficiency</span>
+              <div class="domain__row-content">
+                What is the minimum number of steps, screens, and cognitive
+                decisions required to produce the confirmed outcome?
+                Where can system patterns, smart defaults, and pre-fill
+                reduce friction without reducing trust? Which elements
+                of the design system can be applied directly versus
+                which require custom interaction design?
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       SEQUENCE LOGIC
+  ════════════════════════════════════════════ -->
+  <section>
+    <div class="container">
+
+      <span class="label">Why the Order Cannot Be Changed</span>
+      <h2>The sequence is not a preference — it is a prerequisite chain</h2>
+
+      <p>
+        The three gates exist in a strict logical dependency. Efficiency
+        is defined as output per unit input. But you cannot calculate
+        this without knowing the method produces the intended output —
+        which is Efficacy. Efficacy is defined as whether a method
+        achieves a goal. But you cannot assess this without knowing
+        the goal is correctly defined — which is Effectiveness.
+      </p>
+      <p>
+        This is identical in structure to the requirement that algebra
+        precedes calculus, or that a building requires a foundation
+        before walls. The sequence is not a recommendation. It is
+        a logical necessity.
+      </p>
+
+      <div class="sequence__diagram">
+
+        <div class="seq-row">
+          <div class="seq-row__gate">
+            <p class="label">Gate 01</p>
+            <h4>Effectiveness</h4>
+            <p class="question">Right thing?</p>
+          </div>
+          <div class="seq-row__dependency">
+            <p>
+              Must be confirmed first. If the goal is wrong, Efficacy
+              evaluation is meaningless — you are validating a path to
+              the wrong destination. If the goal is wrong, Efficiency
+              optimization accelerates misdirection. No downstream
+              gate can compensate for an Effectiveness failure.
+              <strong>Failure here is invisible until late and expensive
+              to reverse.</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="seq-row">
+          <div class="seq-row__gate">
+            <p class="label">Gate 02</p>
+            <h4>Efficacy</h4>
+            <p class="question">Right method?</p>
+          </div>
+          <div class="seq-row__dependency">
+            <p>
+              Only evaluated after Effectiveness is confirmed. Efficacy
+              asks: given we know this is the right goal, does this
+              approach actually reach it? A method can be pointed at the
+              correct objective and still be incapable of achieving it.
+              Optimizing an inefficacious method produces faster failure.
+              <strong>Efficacy is the bridge between direction and execution.</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="seq-row">
+          <div class="seq-row__gate">
+            <p class="label">Gate 03</p>
+            <h4>Efficiency</h4>
+            <p class="question">Right use of resources?</p>
+          </div>
+          <div class="seq-row__dependency">
+            <p>
+              Only applied after both prior gates pass. With direction
+              confirmed and method validated, Efficiency becomes
+              legitimate and powerful — it is now optimization of a
+              correct, working system rather than acceleration of
+              an unvalidated one. Premature efficiency is not a
+              shortcut; <strong>it is a mechanism for producing
+              high-quality irrelevance faster.</strong>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <blockquote>
+        "The more efficient you are at doing the wrong thing, the wronger
+        you become. It is much better to do the right thing wronger than
+        the wrong thing righter."
+        <cite>Russell Ackoff — Systems Theorist, Wharton School</cite>
+      </blockquote>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       FAILURE GALLERY
+  ════════════════════════════════════════════ -->
+  <section>
+    <div class="container--wide">
+
+      <div class="container" style="padding-left:0;padding-right:0;">
+        <span class="label">Optimized Irrelevance — Case Studies</span>
+        <h2>What happens when the sequence is inverted</h2>
+        <p class="failures__intro">
+          These failures are not accidents of execution or insufficient resources.
+          Each traces to the same structural error: Efficiency was applied before
+          Effectiveness or Efficacy was confirmed. The result — in every case —
+          is a well-resourced, well-executed path to the wrong destination.
+        </p>
+      </div>
+
+      <div class="failure-grid">
+
+        <div class="failure-card">
+          <p class="failure-card__domain">Marketing / Metrics</p>
+          <h3 class="failure-card__name">McNamara's Vietnam</h3>
+          <p class="failure-card__body">
+            Robert McNamara applied Ford Motor's metrics-driven management
+            to the Pentagon. The primary measure of war progress became
+            enemy body count. U.S. forces "won" on every quantifiable
+            metric while losing the war entirely. Brigadier General Lansdale
+            proposed including an "x-factor" for the sentiments of the
+            Vietnamese population. McNamara literally erased it — he
+            couldn't measure it. Over 90% of generals later called body
+            counts a completely misguided measure of progress.
+          </p>
+          <p class="failure-card__error">Error: Efficiency before Effectiveness — optimized the wrong metric</p>
+        </div>
+
+        <div class="failure-card">
+          <p class="failure-card__domain">Product / Strategy</p>
+          <h3 class="failure-card__name">The Maginot Line</h3>
+          <p class="failure-card__body">
+            France spent the equivalent of $45 billion today constructing
+            the most sophisticated fortification system in history — 142
+            artillery forts, underground railways, interlocking fields of fire.
+            It was optimized for the last war, not the next one. Germany
+            bypassed it through the Ardennes in six weeks. The Line's
+            apparent invulnerability suppressed investment in mobile forces,
+            compounding the effectiveness failure with strategic fragility.
+          </p>
+          <p class="failure-card__error">Error: Efficiency before Effectiveness — optimized for the wrong threat</p>
+        </div>
+
+        <div class="failure-card">
+          <p class="failure-card__domain">Brand / Product</p>
+          <h3 class="failure-card__name">Kodak &amp; Nokia</h3>
+          <p class="failure-card__body">
+            Kodak invented the digital camera in 1975, then spent three
+            decades optimizing film production while digital photography
+            consumed its market. Nokia held 50% global mobile share in 2007,
+            hyper-optimized hardware manufacturing, and dismissed a
+            touchscreen prototype with "that's not how phones work."
+            Both companies were extraordinarily efficient at the wrong thing —
+            and their efficiency made the transition harder, not easier.
+          </p>
+          <p class="failure-card__error">Error: Efficiency before Effectiveness — optimized a declining asset</p>
+        </div>
+
+        <div class="failure-card">
+          <p class="failure-card__domain">UX / CX</p>
+          <h3 class="failure-card__name">Wells Fargo Cross-Selling</h3>
+          <p class="failure-card__body">
+            CEO Richard Kovacevich's "Going for Gr-Eight" initiative
+            targeted eight products per customer. Employees under extreme
+            metric pressure opened 3.5 million unauthorized accounts,
+            created fake email addresses, and moved customer money without
+            consent. The efficiency metric was maximized; the customer
+            experience was destroyed. Cost: $3 billion in fines and a
+            permanent Federal Reserve growth cap on the institution.
+          </p>
+          <p class="failure-card__error">Error: Efficiency before Effectiveness — optimized the wrong outcome</p>
+        </div>
+
+        <div class="failure-card">
+          <p class="failure-card__domain">Product / Efficacy</p>
+          <h3 class="failure-card__name">Boeing 737 MAX</h3>
+          <p class="failure-card__body">
+            Rather than designing a new airframe (effective but expensive),
+            Boeing mounted larger engines on a 1960s fuselage. The
+            aerodynamic instability this created was patched with software
+            (MCAS) rather than resolved in hardware. MCAS malfunctioned.
+            346 people died. Every decision in the chain was an efficiency
+            substitution applied before the Efficacy question was answered:
+            does this approach actually produce a safe aircraft?
+          </p>
+          <p class="failure-card__error">Error: Efficiency before Efficacy — optimized cost, skipped method validation</p>
+        </div>
+
+        <div class="failure-card">
+          <p class="failure-card__domain">Workflow / Policy</p>
+          <h3 class="failure-card__name">No Child Left Behind</h3>
+          <p class="failure-card__body">
+            Tying school funding to standardized test scores created an
+            efficient system for producing test-takers. A nine-year
+            National Research Council study concluded the emphasis on
+            testing "yielded little learning progress but caused significant
+            harm." Curriculum narrowed, creativity declined, cheating
+            scandals erupted, and U.S. students dropped from 18th to 31st
+            in global mathematics rankings. The metric improved. The
+            outcome — educated children — worsened.
+          </p>
+          <p class="failure-card__error">Error: Efficiency before Effectiveness — optimized a proxy for the real goal</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       GOODHART'S LAW CONNECTION
+  ════════════════════════════════════════════ -->
+  <section>
+    <div class="container">
+
+      <span class="label">Supporting Principle</span>
+      <h2>Goodhart's Law is an Effectiveness failure in formal dress</h2>
+
+      <p>
+        Goodhart's Law states: when a measure becomes a target, it ceases
+        to be a good measure. Campbell's Law extends it: the more any
+        quantitative indicator is used for high-stakes decisions, the more
+        subject it will be to corruption and distortion. Both laws describe
+        the same structural failure ThreeE prevents — a metric (Efficiency
+        target) is optimized before the question of whether it represents
+        the right goal (Effectiveness) is confirmed.
+      </p>
+      <p>
+        Every Goodhart failure is an Effectiveness failure that was
+        institutionalized as an Efficiency mandate. ThreeE prevents
+        this by making the Effectiveness gate mandatory — before any
+        metric is adopted as a target, you must verify it is a valid
+        proxy for the real outcome, not a convenient substitute for it.
+      </p>
+
+      <blockquote>
+        "There is surely nothing quite so useless as doing with great
+        efficiency what should not be done at all."
+        <cite>Peter Drucker — The Effective Executive (1963)</cite>
+      </blockquote>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       RECURSIVE ARGUMENT
+  ════════════════════════════════════════════ -->
+  <section>
+    <div class="container">
+
+      <span class="label">Self-Validation</span>
+      <h2>ThreeE passes its own test</h2>
+
+      <p>
+        The strongest possible justification for a decision principle
+        is that it survives its own application. Apply ThreeE to itself:
+      </p>
+
+      <div class="recursive__grid">
+
+        <div class="recursive-card">
+          <p class="recursive-card__gate">Gate 01 · Effectiveness</p>
+          <p class="recursive-card__verdict">Passes</p>
+          <p class="recursive-card__body">
+            ThreeE targets the root cause of decision failure — sequence
+            inversion — rather than symptoms like poor execution or
+            insufficient data. The six case studies above, and every
+            analogous failure across every domain, trace to the same
+            structural error. ThreeE is aimed at the right problem.
+          </p>
+        </div>
+
+        <div class="recursive-card">
+          <p class="recursive-card__gate">Gate 02 · Efficacy</p>
+          <p class="recursive-card__verdict">Passes</p>
+          <p class="recursive-card__body">
+            The filter demonstrably reorders cognition: applying EEE
+            forces the Effectiveness question before the Efficacy question
+            before the Efficiency question. This maps to what cognitive
+            scientists identify as metacognition — the pattern that
+            characterizes expert decision-making under high stakes.
+            Gary Klein's research on Recognition-Primed Decision-Making
+            found that experts already operate in this exact sequence.
+          </p>
+        </div>
+
+        <div class="recursive-card">
+          <p class="recursive-card__gate">Gate 03 · Efficiency</p>
+          <p class="recursive-card__verdict">Passes</p>
+          <p class="recursive-card__body">
+            Three words. One rule. One question per gate. Zero ambiguity
+            about sequence. ThreeE achieves comparable or superior decision
+            quality to frameworks with four to ten layers and dozens of
+            metrics — with a fraction of the cognitive load. It is the
+            minimum viable structure for maximum decision integrity.
+          </p>
+        </div>
+
+      </div>
+
+      <p>
+        A principle that cannot survive its own scrutiny has no business
+        governing anyone else's decisions. ThreeE does survive it.
+        This self-referential consistency — what Rawls called reflective
+        equilibrium — is the strongest form of justification available
+        to a practical framework.
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       INTELLECTUAL LINEAGE
+  ════════════════════════════════════════════ -->
+  <section>
+    <div class="container">
+
+      <span class="label">Intellectual Lineage</span>
+      <h2>Convergent conclusions across two thousand years</h2>
+
+      <p>
+        ThreeE did not emerge in isolation. The priority of direction over
+        method over optimization is among the oldest and most consistently
+        rediscovered conclusions in philosophy, management science, and
+        cognitive research. Each thinker below arrived at part of the
+        same structure. ThreeE synthesizes and formalizes what they each
+        identified partially.
+      </p>
+
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>Thinker / Framework</th>
+            <th>Domain</th>
+            <th>Contribution</th>
+            <th>ThreeE relation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="thinker">Aristotle — Phronesis</td>
+            <td>Philosophy</td>
+            <td>Practical wisdom establishes the right end before reasoning selects means. "Virtue makes the goal right; practical wisdom selects the path." Cleverness (deinotes) without correct ends is mere technical proficiency.</td>
+            <td>Established the logical priority of Effectiveness over Efficacy and Efficiency — 350 BC.</td>
+          </tr>
+          <tr>
+            <td class="thinker">Kant — Categorical vs. Hypothetical Imperatives</td>
+            <td>Philosophy</td>
+            <td>Categorical imperatives determine what is right (Effectiveness). Hypothetical imperatives determine how to achieve given ends (Efficacy / Efficiency). The entire means-optimization apparatus is subordinate to the prior determination of what ought to be done.</td>
+            <td>Formalized the dependency: Efficacy and Efficiency cannot be evaluated before Effectiveness is confirmed.</td>
+          </tr>
+          <tr>
+            <td class="thinker">Drucker — The Effective Executive (1967)</td>
+            <td>Management</td>
+            <td>"Efficiency is doing things right; effectiveness is doing the right things." Effectiveness is the foundation. Efficiency is a minimum condition for survival after success is achieved.</td>
+            <td>Named the Effectiveness / Efficiency distinction and established its priority. ThreeE adds Efficacy as the missing middle gate.</td>
+          </tr>
+          <tr>
+            <td class="thinker">Russell Ackoff — Systems Thinking</td>
+            <td>Systems theory</td>
+            <td>"The more efficient you are at doing the wrong thing, the wronger you become." Efficiency applied to an ineffective direction is an amplifier of misdirection, not a corrective.</td>
+            <td>Proved the asymmetry that justifies the sequence: Effectiveness errors compound with Efficiency applied; Efficiency errors self-correct once Effectiveness is established.</td>
+          </tr>
+          <tr>
+            <td class="thinker">W. Edwards Deming — 14 Points</td>
+            <td>Quality / systems</td>
+            <td">Point 1: Create constancy of purpose. Without a clearly defined aim, a system produces noise. Sub-optimization — perfecting parts without understanding the whole — is the central disease of Western management.</td>
+            <td>Constancy of purpose = Effectiveness established first. Sub-optimization = Efficiency applied before Effectiveness and Efficacy are confirmed.</td>
+          </tr>
+          <tr>
+            <td class="thinker">Michael Porter — What Is Strategy? (1996)</td>
+            <td>Competitive strategy</td>
+            <td>Operational effectiveness is not strategy. Companies that equate efficiency with direction converge on identical activities, lose differentiation, and destroy the competitive advantage they are trying to optimize.</td>
+            <td>Efficiency-as-strategy is the corporate manifestation of sequence inversion. Strategy = Effectiveness. Operations = Efficiency. Without the former, the latter is self-defeating.</td>
+          </tr>
+          <tr>
+            <td class="thinker">Gary Klein — Recognition-Primed Decision (RPD)</td>
+            <td>Cognitive science</td>
+            <td>Expert decision-makers under time pressure operate in a sequence: recognize situation → simulate action → execute. 117 of 134 decision points in Klein's firefighter studies used this structure. Experts do not simultaneously optimize; they filter sequentially.</td>
+            <td>Empirical confirmation that the ThreeE sequence is how expert cognition actually operates — not as a theoretical ideal but as observed behavior under high-stakes conditions.</td>
+          </tr>
+          <tr>
+            <td class="thinker">Peter Fishburn — Lexicographic Decision Theory (1974)</td>
+            <td>Decision mathematics</td>
+            <td>Lexicographic orderings — where criteria are applied in strict priority sequence, with higher criteria dominating absolutely — are formally rational (complete and transitive) even when they resist representation as a single utility function.</td>
+            <td>ThreeE is a lexicographic ordering. The mathematical proof that this structure is rational removes the objection that a weighted simultaneous evaluation would be superior.</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       CLOSING
+  ════════════════════════════════════════════ -->
+  <section class="closing">
+    <div class="container">
+
+      <p class="label" style="color:#666;">Conclusion</p>
+
+      <div class="closing__body">
+        <p>
+          ThreeE is not a productivity technique. It is a structural claim
+          about the logical relationship between direction, method, and
+          optimization — a claim that has been independently arrived at by
+          philosophers, management scientists, cognitive researchers, and
+          military strategists across two thousand years of convergent
+          reasoning.
+        </p>
+        <p>
+          The deepest claim is not that Effectiveness matters more than
+          Efficiency. Drucker said that sixty years ago. The deepest claim
+          is that the sequence itself is the insight. Most frameworks treat
+          the three as dimensions to balance. ThreeE treats them as gates
+          to pass in order. This structural distinction — from simultaneous
+          weighting to sequential filtering — transforms a truism into a
+          decision principle.
+        </p>
+        <p>
+          For a studio operating across marketing, product, brand, and
+          experience design, this principle governs every engagement.
+          It is the reason every project begins with an objective audit
+          before a creative brief. The reason every proposal includes
+          a method rationale before a production budget. The reason
+          optimization is treated as a phase, not a default mode.
+        </p>
+        <p>
+          ThreeE is directional before it is operational.
+          That distinction is the difference between intelligence and
+          mere cleverness.
+        </p>
+      </div>
+
+      <p class="closing__final">
+        Effectiveness, then Efficacy,<br>then Efficiency.<br>
+        In that order. Always.
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <p class="label">ThreeE Framework — Studio Operating Principle — Framework 001</p>
+    </div>
+  </footer>
+
+</body>
+</html>
